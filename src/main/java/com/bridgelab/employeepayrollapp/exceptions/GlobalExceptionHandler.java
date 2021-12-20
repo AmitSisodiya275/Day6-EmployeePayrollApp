@@ -19,4 +19,10 @@ public class GlobalExceptionHandler {
 		List<String> errorList = allErrors.stream().map(obj -> obj.getDefaultMessage()).collect(Collectors.toList());
 		return new ResponseEntity<List<String>>(errorList, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(EmployeePayrollException.class)
+	public ResponseEntity<?> handleEmployeePayrollException(EmployeePayrollException e){
+		String errorMessage = e.getMessage();
+		return new ResponseEntity<String>(errorMessage, HttpStatus.NOT_FOUND);
+	}
 }

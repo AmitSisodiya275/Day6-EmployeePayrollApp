@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bridgelab.employeepayrollapp.exceptions.EmployeePayrollException;
 import com.bridgelab.employeepayrollapp.model.Employee;
 import com.bridgelab.employeepayrollapp.repository.EmployeeRepository;
 
@@ -18,12 +19,16 @@ public class EmployeeService implements IEmployeeService {
 	@Override
 	public List<Employee> getAllEmp() {
 		List<Employee> empList = empRepository.findAll();
+		if (empList.isEmpty()) {
+			throw new EmployeePayrollException("Employee Payroll Data is Empty");
+		}
 		return empList;
 	}
 
 	@Override
 	public Employee getEmpById(int id) {
-		Employee employee = empRepository.findById(id).orElse(null);
+		Employee employee = empRepository.findById(id).orElseThrow(() -> new EmployeePayrollException(
+				"Employee Data is not present with ID : " + id + ", Please Check the ID."));
 		return employee;
 	}
 
@@ -41,8 +46,10 @@ public class EmployeeService implements IEmployeeService {
 			employee.setName(emp.getName());
 			employee.setSalary(emp.getSalary());
 			return empRepository.save(employee);
+		} else {
+			throw new EmployeePayrollException(
+					"Employee Data is not present with ID : " + id + ", Please Check the ID.");
 		}
-		return null;
 	}
 
 	@Override
