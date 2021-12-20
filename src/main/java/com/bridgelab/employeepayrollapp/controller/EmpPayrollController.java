@@ -2,9 +2,12 @@ package com.bridgelab.employeepayrollapp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,14 +49,15 @@ public class EmpPayrollController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<ResponseEmpDTO> addEmp(@RequestBody Employee emp) {
-		Employee employee = empService.save(emp);
-		ResponseEmpDTO responseDTO = convertor.entityToResponseDTO(employee);
+	public ResponseEntity<ResponseEmpDTO> addEmp(@Valid @RequestBody EmployeeDTO empdto) {
+		Employee emp = convertor.dtoToEntity(empdto);
+		Employee savedEmployee = empService.save(emp);
+		ResponseEmpDTO responseDTO = convertor.entityToResponseDTO(savedEmployee);
 		return new ResponseEntity<ResponseEmpDTO>(responseDTO, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/update/{eId}")
-	public ResponseEntity<ResponseEmpDTO> updateEmp(@PathVariable("eId") int id, @RequestBody EmployeeDTO empDTO) {
+	public ResponseEntity<ResponseEmpDTO> updateEmp(@PathVariable("eId") int id, @Valid @RequestBody EmployeeDTO empDTO) {
 		Employee employee = convertor.dtoToEntity(empDTO);
 		Employee updatedEmployee = empService.update(id, employee);
 		ResponseEmpDTO responseDTO = convertor.entityToResponseDTO(updatedEmployee);
