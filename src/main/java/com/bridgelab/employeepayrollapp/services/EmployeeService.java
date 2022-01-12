@@ -53,7 +53,13 @@ public class EmployeeService implements IEmployeeService {
 	}
 
 	@Override
-	public void deleteById(int id) {
-		empRepository.deleteById(id);
+	public String deleteById(int id) {
+		if (empRepository.existsById(id)) {
+			empRepository.deleteById(id);
+			return "Employee data deleted with ID ; " + id;
+		}
+		else {
+			throw new EmployeePayrollException("Employee Data is not present with ID"+id);
+		}
 	}
 }

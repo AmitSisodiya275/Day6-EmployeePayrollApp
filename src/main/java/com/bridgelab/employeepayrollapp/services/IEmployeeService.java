@@ -14,5 +14,5 @@ public interface IEmployeeService {
 	
 	Employee update(int id, Employee emp);
 	
-	void deleteById(int id);
+	String deleteById(int id);
 }
